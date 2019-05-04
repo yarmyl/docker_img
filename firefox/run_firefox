@@ -1,0 +1,14 @@
+#!/bin/bash
+
+EXISTS=$(getent group hostgroup)
+if [ "$EXISTS" == "" ]; then
+groupadd -g $HOST_GID -o hostgroup
+usermod -u $HOST_UID -g $HOST_GID docker
+usermod -u $HOST_UID -aG audio docker
+chown docker:hostgroup \
+    /home/docker/.mozilla \
+    /home/docker/.mozilla/firefox \
+    /home/docker/Downloads
+fi
+
+su - docker -c firefox
